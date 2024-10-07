@@ -1,32 +1,41 @@
+import { ErrorMsgIndexes } from "./error.model";
 import { CalculatorOperation } from "./operations.model";
 
-export interface Calculator {
-  firstOperand: {
-    value: number;
-    decimal: boolean;
-    label: string;
-  },
-  secondOperand: {
-    value: number;
-    decimal: boolean;
-    label: string;
-  },
-  operation: FalsyOperation | TruthyOperation,
-  result: {
-    value: number;
-    label: string;
-  }
-}
 interface BaseOperation {
   label: string;
 };
 
-interface FalsyOperation extends BaseOperation {
+interface UnselectedOperation extends BaseOperation {
   selected: false,
-  value: undefined
+  eval: undefined
 };
 
-interface TruthyOperation extends BaseOperation {
+interface SelectedOperation extends BaseOperation {
   selected: true,
-  value: CalculatorOperation
+  eval: CalculatorOperation
 };
+
+export interface BaseOperand {
+  value: number;
+  label: string;
+  decimal: boolean;
+}
+
+export interface Operand {
+  first: BaseOperand;
+  second: BaseOperand;
+}
+
+interface ResultTrue extends BaseOperand {
+  isError: true;
+  errorCode: ErrorMsgIndexes;
+}
+interface ResultFalse extends BaseOperand {
+  isError: false;
+  errorCode: "-1";
+}
+
+export type Result = ResultTrue | ResultFalse
+
+
+export type Operation = SelectedOperation | UnselectedOperation;
