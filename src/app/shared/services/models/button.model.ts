@@ -1,12 +1,5 @@
 import { OperationType } from './operations.model'
 
-export interface Button {
-  id: number;
-  label: string;
-  operand: boolean;
-  value: number | OperationType;
-}
-
 interface BaseButton {
   id: number;
   label: string;
@@ -17,14 +10,24 @@ interface NumericButton extends BaseButton {
   value: number;
 };
 
-interface OperationButton extends BaseButton {
+export interface OperationButton extends BaseButton {
   operand: 'operation';
   value: OperationType;
 };
 
 interface DeletionButton extends BaseButton {
   operand: 'deletion';
-  value: 'erase' | 'delete'
+  value: 'erase' | 'reset'
 }
 
-export type Button2 = NumericButton | OperationButton | DeletionButton
+interface DecimalButton extends BaseButton {
+  operand: 'decimal'
+  value: 0
+}
+
+export interface EqualButton extends BaseButton {
+  operand: 'equal',
+  value: 0
+}
+
+export type Button = NumericButton | OperationButton | DeletionButton | DecimalButton | EqualButton;
