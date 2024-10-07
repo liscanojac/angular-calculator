@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { Button2 } from './shared/services/models/button.model';
+import { Button } from './shared/services/models/button.model';
 import { CalculatorService } from './shared/services/calculator.service';
 
 import { ButtonComponent } from './shared/components/button/button.component';
 import { ScreenComponent } from './shared/components/screen/screen.component';
+import { CalculatorScreen } from './shared/services/models/screen.model';
 
 @Component({
   selector: 'app-root',
@@ -14,22 +15,23 @@ import { ScreenComponent } from './shared/components/screen/screen.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'angular-midudev-app';
-  buttons: Array<Button2> = [];
-  screenInput = '';
-  resultInput = '';
-  calculatorScreen = {};
+  buttons: Array<Button> = [];
+  calculatorScreen: CalculatorScreen = {
+    input: '',
+    result: ''
+  };
 
-  constructor(private calculatorService: CalculatorService) {};
+  resultValue = 0;
 
-  ngOnInit(): void {
+  constructor(private calculatorService: CalculatorService) {
     this.buttons = this.calculatorService.getButtons();
     this.calculatorScreen = this.calculatorService.getCalculatorScreen();
-  }
+  };
 
-  btnClicked(btn: Button2) {
-    this.calculatorService.calculate(btn);
-    this.screenInput = btn.label
+  btnClicked(btn: Button) {
+    this.calculatorScreen = this.calculatorService.updateScreen(btn);
+    this.resultValue = this.calculatorService.getResultValue();
   }
 }
