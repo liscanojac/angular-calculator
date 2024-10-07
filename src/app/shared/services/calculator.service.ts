@@ -1,181 +1,183 @@
 import { Injectable } from '@angular/core';
-import { Button, Button2 } from './models/button.model';
+import { Button, EqualButton, OperationButton } from './models/button.model';
 import { CalculatorScreen } from './models/screen.model';
-import { Calculator } from './models/calculator.model';
-import { operations } from './operations';
+import { Operand, Operation, Result } from './models/calculator.model';
+import { buttons } from './buttons';
+import { initialOperand, initialOperation, operations as calculatorOperations, initialResult } from './operations';
+import { OperandType } from './models/operations.model';
+import { formatOperand, isNumTooLong } from './numberFormat';
+import { errorMsg } from './errorMsg';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class CalculatorService {
 
-  buttons: Array<Button2> = [
-    {
-      id: 7,
-      operand: 'numeric',
-      label: '7',
-      value: 7
-    },
-    {
-      id: 8,
-      operand: 'numeric',
-      label: '8',
-      value: 8
-    },
-    {
-      id: 9,
-      operand: 'numeric',
-      label: '9',
-      value: 9
-    },
-    {
-      id: 4,
-      operand: 'numeric',
-      label: '4',
-      value: 4
-    },
-    {
-      id: 5,
-      operand: 'numeric',
-      label: '5',
-      value: 5
-    },
-    {
-      id: 6,
-      operand: 'numeric',
-      label: '6',
-      value: 6
-    },
-    {
-      id: 1,
-      operand: 'numeric',
-      label: '1',
-      value: 1
-    },
-    {
-      id: 2,
-      operand: 'numeric',
-      label: '2',
-      value: 2
-    },
-    {
-      id: 3,
-      operand: 'numeric',
-      label: '3',
-      value: 3
-    },
-    {
-      id: 10,
-      operand: 'operation',
-      label: '+',
-      value: 'add'
-    },
-    {
-      id: 11,
-      operand: 'operation',
-      label: '-',
-      value: 'substract'
-    }
-  ];
-
   calculatorScreen: CalculatorScreen = {
     input: '',
     result: ''
   };
 
-  calculator: Calculator = {
-    firstOperand: {
-      value: 0,
-      decimal: false,
-      label: ''
-    },
-    secondOperand: {
-      value: 0,
-      decimal: false,
-      label: ''
-    },
-    operation: {
-      value: undefined,
-      selected: false,
-      label: ''
-    },
-    result: {
-      value: 0,
-      label: ''
-    }
+  operand: Operand = {
+    first: {...initialOperand},
+    second: {...initialOperand}
   }
+
+  operation: Operation = {...initialOperation}
+
+  result: Result = {...initialResult}
 
   constructor() { }
 
   getButtons() {
-    return this.buttons;
+    return buttons;
   }
 
   getCalculatorScreen() {
     return this.calculatorScreen;
   }
 
+  resetOperands() {
+    this.operand.first = {...initialOperand};
+    this.operand.second = {...initialOperand};
+    this.operation = {...initialOperation};
+  }
+
   resetCalculator() {
-    this.calculator = {
-          firstOperand: {
-            value: 0,
-            decimal: false,
-            label: ''
-          },
-          secondOperand: {
-            value: 0,
-            decimal: false,
-            label: ''
-          },
-          operation: {
-            value: undefined,
-            selected: false,
-            label: ''
-          },
-          result: {
-            value: 0,
-            label: ''
-          }
-        }
+    this.resetOperands();
+    this.result = {...initialResult}
   }
 
-  eraseLastCharacter() {
-
+  erase() {
+    if (this.operand.second.label && this.operation.selected) {
+      //Borrar ultimo caracter de segundo operand
+      this.eraseLastCharacter('second');
+      this.result = this.operation.eval(this.operand.first.value, this.operand.second.value);
+      return;
+    }
+    if(this.operation.selected) {
+      // Borrar operacion
+      this.operation = {...initialOperation};
+      this.result = {...initialResult};
+      return;
+    }
+    this.eraseLastCharacter('first');
   }
-  calculate(btn: Button2) {
+
+  eraseLastCharacter(operandType: OperandType) {
+    if (this.operand[operandType].label.slice(-1) === '.') {
+      this.operand[operandType].decimal = false;
+    }
+    this.operand[operandType].label = this.operand[operandType].label.substring(0, this.operand[operandType].label.length - 1);
+    this.operand[operandType].value = this.operand[operandType].label ?
+      parseFloat(this.operand[operandType].label) : 
+      0;
+  }
+
+  setOperation(btn: OperationButton) {
+    this.operation.selected = true;
+    this.operation.label = btn.label;
+    this.operation.eval = calculatorOperations[btn.value];
+    if (btn.value === 'percent' && !this.operand.second.value) {
+      // calculo de percentajes por default
+      this.result = this.operation.eval(this.operand.first.value);
+    }
+  }
+
+  makeOperandFromResult(btn: OperationButton | EqualButton) {
+    this.operand.first = this.result;
+    this.operand.second = {...initialOperand};
+    this.result = {...initialResult}
+    btn.operand === 'operation' ? 
+      this.setOperation(btn):
+      this.operation = {...initialOperation};
+  }
+
+  calculate(btn: Button) {
     if (btn.operand === 'deletion') {
       // Donde se borra
-      btn.value === 'erase' ? this.resetCalculator() : this.eraseLastCharacter(); 
+      if(btn.value === 'reset') {
+        this.resetCalculator();
+        return;
+      }
+      this.erase();
+      return;
+    }
+    if (btn.operand === 'equal' && this.operand.second.label) {
+      if(this.result.isError) {
+        // aca va el mensaje de error
+        this.resetOperands();
+        return;
+      }
+      this.makeOperandFromResult(btn)
+      return;
     }
     if (btn.operand === 'operation') {
       // Operaciones Matematicas
-      if(btn.value === 'substract' && (!this.calculator.firstOperand.value) || (this.calculator.operation.selected && ! this.calculator.secondOperand.value)) {
-        // cambio de signo de operadores
+      if (this.result.label && !this.result.isError) {
+        this.makeOperandFromResult(btn);
       }
-      this.calculator.operation.selected = true;
-      this.calculator.operation.label = btn.label;
-      this.calculator.operation.value = operations[btn.value];
+      if (btn.value === 'substract' && 
+        ((!this.operand.first.label) || 
+        (this.operation.selected && !this.operand.second.label))) {
+        // cambio de signo de operadores
+        this.operation.selected ? 
+          this.operand.second.label += btn.label : 
+          this.operand.first.label += btn.label
+        return;
+      }
+      if (this.operand.first.label) this.setOperation(btn);
+      return;
     }
     // Escribir Numeros
-    if (this.calculator.operation.selected) {
-      
-      this.calculator.secondOperand.label += btn.label;
-      this.calculator.secondOperand.value = parseFloat(this.calculator.secondOperand.label);
-      this.calculator.result.value = this.calculator.operation.value(this.calculator.firstOperand.value, this.calculator.secondOperand.value);
-      this.calculator.result.label = this.calculator.result.value.toString();
+    if (this.operation.selected) {
+      this.typeOperand('second', btn);
+      if(!this.secondOperandOnlyDecimal()){
+        this.result = this.operation.eval(this.operand.first.value, this.operand.second.value);
+      }
+      return;
     }
-    this.calculator.firstOperand.label += btn.label;
-    this.calculator.firstOperand.value = parseFloat(this.calculator.firstOperand.label);
+    if(this.result.isError) this.result = {...initialResult};
+    this.typeOperand('first', btn);
+  }
+
+  typeOperand(operandType: OperandType, btn: Button) {
+    if(this.operand[operandType].label.length < 14) {
+      this.operand[operandType].label += btn.label
+      if(btn.operand === 'decimal') this.operand[operandType].decimal = true;
+      if(!this.secondOperandOnlyDecimal()) {
+        this.operand[operandType].value = parseFloat(this.operand[operandType].label);
+      }
+    }
+  }
+
+  secondOperandOnlyDecimal(): boolean {
+    return this.operand.second.label === '.';
   }
 
 
-  updateScreen(btn: Button2): CalculatorScreen {
+  getResultToScreen(rsl: Result): string {
+    if (rsl.isError) {
+      //handler of error messages
+      return errorMsg[rsl.errorCode];
+    }
+    if (isNumTooLong(rsl.label)) {
+      return rsl.value.toExponential(5);
+    }
+    return formatOperand(rsl);
+  }
+
+  getResultValue() {
+    return this.result.value;
+  }
+
+  updateScreen(btn: Button): CalculatorScreen {
 
     this.calculate(btn);
+    this.calculatorScreen.input = `${formatOperand(this.operand.first)}${this.operation.label}${formatOperand(this.operand.second)}`;
+    this.calculatorScreen.result = this.getResultToScreen(this.result);
 
-    return {
-      input: '',
-      result: ''
-    }
+    return this.calculatorScreen;
   }
 }
