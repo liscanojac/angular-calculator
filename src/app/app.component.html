@@ -202,7 +202,8 @@
       </svg>
       <h1>Hello, {{ title }}</h1>
       <p>Congratulations! Your app is running. 🎉</p>
-      <app-screen [calculatorInput]="screenInput" [result]="resultInput" />
+      <p>{{ resultValue }}</p>
+      <app-screen [calculatorScreen]="calculatorScreen" />
       @for (button of buttons; track button.id) {
       <app-button [button]="button" (btnClickEvent)="btnClicked($event)" />
       }
