@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Button2 } from '../../services/models/button.model';
+import { Button } from '../../services/models/button.model';
 
 @Component({
   selector: 'app-button',
@@ -10,10 +10,10 @@ import { Button2 } from '../../services/models/button.model';
 })
 export class ButtonComponent {
 
-  @Input({ required: true }) button!: Button2;
-  @Output() btnClickEvent = new EventEmitter<Button2>();
+  @Input({ required: true }) button!: Button;
+  @Output() btnClickEvent = new EventEmitter<Button>();
 
-  btnClick(btn: Button2) {
+  btnClick(btn: Button) {
     this.btnClickEvent.emit(btn);
   }
 }
