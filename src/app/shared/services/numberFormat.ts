@@ -14,12 +14,13 @@ export function formatOperand(operand: BaseOperand): string {
   if (operand.label.slice(-1) === '.') decimalAtEnd = true;
 
   return operand.value > 999 ? 
-      `${formatThousands(operand.value)}${decimalAtEnd ? '.' : ''}` : 
+      `${formatThousands(operand)}${decimalAtEnd ? '.' : ''}` : 
       operand.label;
 }
 
-function formatThousands(a: number): string {
-  const b = a.toLocaleString('en-US', {
+function formatThousands(operand: BaseOperand): string {
+  const b = operand.value.toLocaleString('en-US', {
+    maximumFractionDigits: 14 - operand.label.split('.')[0].length
   });
 
   return b;
