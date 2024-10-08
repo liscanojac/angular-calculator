@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { CalculatorScreen } from '../../services/models/screen.model';
 
 @Component({
   selector: 'app-screen',
@@ -9,6 +10,10 @@ import { Component, Input } from '@angular/core';
 })
 export class ScreenComponent {
 
-  @Input() calculatorInput: string = '';
-  @Input() result: string = '';
+  // @Input() calculatorInput: string = '';
+  // @Input() result: string = '';
+  @Input({ required: true }) calculatorScreen: CalculatorScreen = {
+    input: '',
+    result: ''
+  }
 }
