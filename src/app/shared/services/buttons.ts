@@ -118,6 +118,12 @@ export const buttons: Array<Button> = [
   ];
 
   export const buttonsObj = {
+    zero: {
+      id: 0,
+      operand: 'numeric',
+      label: '0',
+      value: 0
+    },
     one: {
       id: 1,
       operand: 'numeric',
@@ -172,16 +178,16 @@ export const buttons: Array<Button> = [
       label: '9',
       value: 9
     },
-    ten: {
+    decimal: {
       id: 10,
-      operand: 'numeric',
-      label: '0',
+      operand: 'decimal',
+      label: '.',
       value: 0
     },
-    decimal: {
+    equal: {
       id: 11,
-      operand: 'numeric',
-      label: '.',
+      operand: 'equal',
+      label: '=',
       value: 0
     },
     add: {
@@ -220,7 +226,7 @@ export const buttons: Array<Button> = [
       label: 'erase',
       value: 'erase'
     },
-    delete: {
+    reset: {
       id: 18,
       operand: 'deletion',
       label: 'reset',
