@@ -38,6 +38,6 @@ export type ButtonObj = {
 
 type DeletionType = 'erase' | 'reset';
 
-type NumericType = 'zero' | 'one' | 'two' | 'three' | 'four' | 'five' | 'six' | 'seven' | 'eight' | 'nine'; 
+export type NumericType = 'zero' | 'one' | 'two' | 'three' | 'four' | 'five' | 'six' | 'seven' | 'eight' | 'nine'; 
 
 type ButtonType = 'decimal' | 'equal' | DeletionType | OperationType | NumericType;
