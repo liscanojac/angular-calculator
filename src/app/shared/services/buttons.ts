@@ -1,4 +1,4 @@
-import { Button } from "./models/button.model";
+import { Button, ButtonObj } from "./models/button.model";
 
 export const buttons: Array<Button> = [
     {
@@ -117,7 +117,7 @@ export const buttons: Array<Button> = [
     }
   ];
 
-  export const buttonsObj = {
+  export const buttonsObj: ButtonObj = {
     zero: {
       id: 0,
       operand: 'numeric',
