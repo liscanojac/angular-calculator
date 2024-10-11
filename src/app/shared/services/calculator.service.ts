@@ -158,7 +158,13 @@ export class CalculatorService {
 
   operandLengthAllowed(operandType: OperandType): boolean {
 
-    return this.operand[operandType].label.length < maxNumLength + (this.operand[operandType].label.charAt(0) === '.' ? 0 : 1)
+    return this.operand[operandType].label.length < maxNumLength + this.lenghtFactor(operandType);
+  }
+
+  lenghtFactor(operandType: OperandType): number {
+    return (this.operand[operandType].decimal &&
+            this.operand[operandType].label.charAt(0) !== '.') 
+            ? 1 : 0
   }
 
 
