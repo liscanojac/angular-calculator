@@ -1,5 +1,7 @@
 import { BaseOperand } from "./models/calculator.model";
 
+export const maxNumLength = 14;
+
 export function formatLabel(a: number): string {
   const b = a.toLocaleString('en-US', {
   });
@@ -20,7 +22,7 @@ export function formatOperand(operand: BaseOperand): string {
 
 function formatThousands(operand: BaseOperand): string {
   const b = operand.value.toLocaleString('en-US', {
-    maximumFractionDigits: 14 - operand.label.split('.')[0].length
+    maximumFractionDigits: maxNumLength - operand.label.split('.')[0].length
   });
 
   return b;
@@ -28,6 +30,6 @@ function formatThousands(operand: BaseOperand): string {
 
 export function isNumTooLong(label: string): boolean {
 
-  return label.split('.')[0].length > 13;
+  return label.split('.')[0].length > maxNumLength;
 }
 

@@ -5,7 +5,7 @@ import { Operand, Operation, Result } from './models/calculator.model';
 import { buttons } from './buttons';
 import { initialOperand, initialOperation, operations as calculatorOperations, initialResult } from './operations';
 import { OperandType } from './models/operations.model';
-import { formatOperand, isNumTooLong } from './numberFormat';
+import { formatOperand, isNumTooLong, maxNumLength } from './numberFormat';
 import { errorMsg } from './errorMsg';
 
 
@@ -143,7 +143,7 @@ export class CalculatorService {
   }
 
   typeOperand(operandType: OperandType, btn: Button) {
-    if(this.operand[operandType].label.length < 14) {
+    if(this.operand[operandType].label.length < maxNumLength + 1) {
       this.operand[operandType].label += btn.label
       if(btn.operand === 'decimal') this.operand[operandType].decimal = true;
       if(!this.secondOperandOnlyDecimal()) {
