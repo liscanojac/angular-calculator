@@ -17,7 +17,7 @@ export interface OperationButton extends BaseButton {
 
 interface DeletionButton extends BaseButton {
   operand: 'deletion';
-  value: 'erase' | 'reset'
+  value: DeletionType
 }
 
 interface DecimalButton extends BaseButton {
@@ -31,3 +31,13 @@ export interface EqualButton extends BaseButton {
 }
 
 export type Button = NumericButton | OperationButton | DeletionButton | DecimalButton | EqualButton;
+
+export type ButtonObj = {
+  [button in ButtonType]: Button;
+};
+
+type DeletionType = 'erase' | 'reset';
+
+type NumericType = 'zero' | 'one' | 'two' | 'three' | 'four' | 'five' | 'six' | 'seven' | 'eight' | 'nine'; 
+
+type ButtonType = 'decimal' | 'equal' | DeletionType | OperationType | NumericType;
