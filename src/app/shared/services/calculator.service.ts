@@ -133,7 +133,7 @@ export class CalculatorService {
     // Escribir Numeros
     if (this.operation.selected) {
       this.typeOperand('second', btn);
-      if(!this.secondOperandOnlyDecimal()){
+      if(!this.operandOnlyDecimal('second')){
         this.result = this.operation.eval(this.operand.first.value, this.operand.second.value);
       }
       return;
@@ -143,17 +143,22 @@ export class CalculatorService {
   }
 
   typeOperand(operandType: OperandType, btn: Button) {
-    if(this.operand[operandType].label.length < maxNumLength + 1) {
+    if(this.operandLengthAllowed(operandType)) {
       this.operand[operandType].label += btn.label
       if(btn.operand === 'decimal') this.operand[operandType].decimal = true;
-      if(!this.secondOperandOnlyDecimal()) {
+      if(!this.operandOnlyDecimal(operandType)) {
         this.operand[operandType].value = parseFloat(this.operand[operandType].label);
       }
     }
   }
 
-  secondOperandOnlyDecimal(): boolean {
-    return this.operand.second.label === '.';
+  operandOnlyDecimal(operandType: OperandType): boolean {
+    return this.operand[operandType].label === '.';
+  }
+
+  operandLengthAllowed(operandType: OperandType): boolean {
+
+    return this.operand[operandType].label.length < maxNumLength + (this.operand[operandType].label.charAt(0) === '.' ? 0 : 1)
   }
 
 
