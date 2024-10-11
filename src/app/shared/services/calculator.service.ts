@@ -5,8 +5,8 @@ import { Operand, Operation, Result } from './models/calculator.model';
 import { buttons } from './buttons';
 import { initialOperand, initialOperation, operations as calculatorOperations, initialResult } from './operations';
 import { OperandType } from './models/operations.model';
-import { formatOperand, isNumTooLong, maxNumLength } from './numberFormat';
-import { errorMsg } from './errorMsg';
+import { formatOperand, operandOnlyDecimal, typeOperand } from './operand';
+import { formatResult } from './result';
 
 
 @Injectable({
@@ -132,51 +132,14 @@ export class CalculatorService {
     }
     // Escribir Numeros
     if (this.operation.selected) {
-      this.typeOperand('second', btn);
-      if(!this.operandOnlyDecimal('second')){
+      typeOperand(this.operand.second, btn);
+      if(!operandOnlyDecimal(this.operand.second)){
         this.result = this.operation.eval(this.operand.first.value, this.operand.second.value);
       }
       return;
     }
     if(this.result.isError) this.result = {...initialResult};
-    this.typeOperand('first', btn);
-  }
-
-  typeOperand(operandType: OperandType, btn: Button) {
-    if(this.operandLengthAllowed(operandType)) {
-      this.operand[operandType].label += btn.label
-      if(btn.operand === 'decimal') this.operand[operandType].decimal = true;
-      if(!this.operandOnlyDecimal(operandType)) {
-        this.operand[operandType].value = parseFloat(this.operand[operandType].label);
-      }
-    }
-  }
-
-  operandOnlyDecimal(operandType: OperandType): boolean {
-    return this.operand[operandType].label === '.';
-  }
-
-  operandLengthAllowed(operandType: OperandType): boolean {
-
-    return this.operand[operandType].label.length < maxNumLength + this.lenghtFactor(operandType);
-  }
-
-  lenghtFactor(operandType: OperandType): number {
-    return (this.operand[operandType].decimal &&
-            this.operand[operandType].label.charAt(0) !== '.') 
-            ? 1 : 0
-  }
-
-
-  getResultToScreen(rsl: Result): string {
-    if (rsl.isError) {
-      //handler of error messages
-      return errorMsg[rsl.errorCode];
-    }
-    if (isNumTooLong(rsl.label)) {
-      return rsl.value.toExponential(5);
-    }
-    return formatOperand(rsl);
+    typeOperand(this.operand.first, btn);
   }
 
   getResultValue() {
@@ -187,7 +150,7 @@ export class CalculatorService {
 
     this.calculate(btn);
     this.calculatorScreen.input = `${formatOperand(this.operand.first)}${this.operation.label}${formatOperand(this.operand.second)}`;
-    this.calculatorScreen.result = this.getResultToScreen(this.result);
+    this.calculatorScreen.result = formatResult(this.result);
 
     return this.calculatorScreen;
   }
