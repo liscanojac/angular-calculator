@@ -3,14 +3,15 @@ import { BaseOperand } from "./models/calculator.model";
 
 const maxNumLength = 14;
 
-export function typeOperand(operand: BaseOperand, btn: Button) {
+export function typeOperand(operand: BaseOperand, btn: Button): BaseOperand {
   if(operandLengthAllowed(operand)) {
-      operand.label += btn.label
-      if(btn.operand === 'decimal') operand.decimal = true;
-      if(!operandOnlyDecimal(operand)) {
-        operand.value = parseFloat(operand.label);
-      }
+    operand.label += btn.label
+    if(btn.operand === 'decimal') operand.decimal = true;
+    if(!operandOnlyDecimal(operand)) {
+      operand.value = parseFloat(operand.label);
     }
+  }
+  return operand;
 }
 
 export function formatOperand(operand: BaseOperand): string {

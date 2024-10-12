@@ -132,14 +132,14 @@ export class CalculatorService {
     }
     // Escribir Numeros
     if (this.operation.selected) {
-      typeOperand(this.operand.second, btn);
+      this.operand.second = typeOperand(this.operand.second, btn);
       if(!operandOnlyDecimal(this.operand.second)){
         this.result = this.operation.eval(this.operand.first.value, this.operand.second.value);
       }
       return;
     }
     if(this.result.isError) this.result = {...initialResult};
-    typeOperand(this.operand.first, btn);
+    this.operand.first = typeOperand(this.operand.first, btn);
   }
 
   getResultValue() {
