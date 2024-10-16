@@ -1,16 +1,11 @@
-import { BaseOperand, Operation, Result } from "./models/calculator.model";
-import { OperationFunctions } from "./models/operations.model";
+import { BaseOperand } from "./interfaces/operand";
+import { OperationFunctions } from "./interfaces/operations";
+import { Result } from "./interfaces/result";
 
 export const initialOperand: BaseOperand = {
   value: 0,
   label: '',
   decimal: false
-};
-
-export const initialOperation: Operation = {
-  eval: undefined,
-  selected: false,
-  label: ''
 };
 
 export const initialResult: Result = {

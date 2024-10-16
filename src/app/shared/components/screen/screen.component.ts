@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { CalculatorScreen } from '../../services/models/screen.model';
+import { CalculatorScreen } from '../../interfaces/screen';
 
 @Component({
   selector: 'app-screen',

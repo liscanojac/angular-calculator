@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Button } from '../../services/models/button.model';
+import { Button } from '../../interfaces/button';
 
 @Component({
   selector: 'app-button',

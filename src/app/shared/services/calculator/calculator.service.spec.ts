@@ -1,17 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import { CalculatorService } from './calculator.service';
-import { buttonsObj } from './buttons';
-import { OperationType } from './models/operations.model';
-import { NumericType } from './models/button.model';
+import { NumericType } from '../../interfaces/button';
+import { buttonsObj } from '../../buttons';
+import { OperationType } from '../../interfaces/operations';
 
 fdescribe('CalculatorService', () => {
   let service: CalculatorService;
-
-  function setOperand(num: NumericType) {
+  
+  function pressNumber(num: NumericType) {
     service.updateScreen(buttonsObj[num]);
-  }
+  };
 
-  function setOperation(opr: OperationType) {
+  function selectOperation(opr: OperationType) {
     service.updateScreen(buttonsObj[opr]);
   }
 
@@ -40,7 +40,7 @@ fdescribe('CalculatorService', () => {
   it('testing typing decimal', () => {
 
     service.updateScreen(buttonsObj.decimal);
-    expect(service.operand.first.value).toEqual(0);
+    expect(service.getOperand('first').value).toEqual(0);
   });
 
   it('testing first operand length without decimals', () => {
@@ -48,7 +48,7 @@ fdescribe('CalculatorService', () => {
     for(let i = 0; i < 20; i++) {
       service.updateScreen(buttonsObj.one);
     }
-    expect(service.operand.first.label.length).toEqual(14);
+    expect(service.getOperand('first').label.length).toEqual(14);
   });
 
   it('testing first operand length starting with decimals', () => {
@@ -57,7 +57,7 @@ fdescribe('CalculatorService', () => {
     for(let i = 0; i < 20; i++) {
       service.updateScreen(buttonsObj.two);
     }
-    expect(service.operand.first.label.length).toEqual(14);
+    expect(service.getOperand('first').label.length).toEqual(14);
   });
 
   it('testing first operand length with decimals', () => {
@@ -69,50 +69,50 @@ fdescribe('CalculatorService', () => {
     for(let i = 0; i < 15; i++) {
       service.updateScreen(buttonsObj.two);
     }
-    expect(service.operand.first.label.length).toEqual(15);
+    expect(service.getOperand('first').label.length).toEqual(15);
   });
 
   it('testing secondOperand just typing decimal', () => {
 
-    setOperand('eight');
-    setOperation('add');
+    pressNumber('eight');
+    selectOperation('add');
     service.updateScreen(buttonsObj.decimal);
-    expect(service.operand.second.value).toEqual(0);
+    expect(service.getOperand('second').value).toEqual(0);
   });
 
   it('testing secondOperand just typing decimal', () => {
 
-    setOperand('eight');
-    setOperation('add');
+    pressNumber('eight');
+    selectOperation('add');
     service.updateScreen(buttonsObj.decimal);
-    expect(service.operand.second.label).toEqual('.');
+    expect(service.getOperand('second').label).toEqual('.');
   });
 
   it('testing second operand length without decimals', () => {
 
-    setOperand('eight');
-    setOperation('add');
+    pressNumber('eight');
+    selectOperation('add');
     for(let i = 0; i < 20; i++) {
       service.updateScreen(buttonsObj.one);
     }
-    expect(service.operand.second.label.length).toEqual(14);
+    expect(service.getOperand('second').label.length).toEqual(14);
   });
 
   it('testing second operand length starting with decimals', () => {
 
-    setOperand('eight');
-    setOperation('add');
+    pressNumber('eight');
+    selectOperation('add');
     service.updateScreen(buttonsObj.decimal)
     for(let i = 0; i < 20; i++) {
       service.updateScreen(buttonsObj.two);
     }
-    expect(service.operand.second.label.length).toEqual(14);
+    expect(service.getOperand('second').label.length).toEqual(14);
   });
 
   it('testing first operand length with decimals', () => {
 
-    setOperand('eight');
-    setOperation('add');
+    pressNumber('eight');
+    selectOperation('add');
     for(let i = 0; i < 2; i++) {
       service.updateScreen(buttonsObj.one);
     }
@@ -120,17 +120,17 @@ fdescribe('CalculatorService', () => {
     for(let i = 0; i < 23; i++) {
       service.updateScreen(buttonsObj.two);
     }
-    expect(service.operand.second.label.length).toEqual(15);
+    expect(service.getOperand('second').label.length).toEqual(15);
   });
 
   it('testing first operand length with decimals', () => {
 
     for(let i = 0; i < 25; i++) {
-      setOperand('eight');
+      pressNumber('eight');
     }
-    setOperation('add');
+    selectOperation('add');
     for(let i = 0; i < 23; i++) {
-      setOperand('one');
+      pressNumber('one');
     }
     expect(service.result.label.length).toEqual(14);
   });
@@ -138,12 +138,12 @@ fdescribe('CalculatorService', () => {
   it('testing first operand length with decimals', () => {
 
     for(let i = 0; i < 25; i++) {
-      setOperand('eight');
+      pressNumber('eight');
     }
-    setOperation('multiply');
+    selectOperation('multiply');
     service.updateScreen(buttonsObj.decimal);
     for(let i = 0; i < 23; i++) {
-      setOperand('one');
+      pressNumber('one');
     }
     expect(service.calculatorScreen.result.split(',').join('').length).toEqual(15);
   });

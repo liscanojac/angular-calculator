@@ -1,4 +1,4 @@
-import { OperationType } from './operations.model'
+import { OperationType } from "./operations";
 
 interface BaseButton {
   id: number;

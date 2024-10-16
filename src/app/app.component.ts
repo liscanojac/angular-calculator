@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { Button } from './shared/services/models/button.model';
-import { CalculatorService } from './shared/services/calculator.service';
-
+import { Button } from './shared/interfaces/button';
 import { ButtonComponent } from './shared/components/button/button.component';
 import { ScreenComponent } from './shared/components/screen/screen.component';
-import { CalculatorScreen } from './shared/services/models/screen.model';
+import { CalculatorScreen } from './shared/interfaces/screen';
+import { CalculatorService } from './shared/services/calculator/calculator.service';
 
 @Component({
   selector: 'app-root',
@@ -32,6 +31,6 @@ export class AppComponent {
 
   btnClicked(btn: Button) {
     this.calculatorScreen = this.calculatorService.updateScreen(btn);
-    this.resultValue = this.calculatorService.getResultValue();
+    this.resultValue = this.calculatorService.getResult().value;
   }
 }

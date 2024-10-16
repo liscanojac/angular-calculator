@@ -1,4 +1,4 @@
-import { Button, ButtonObj } from "./models/button.model";
+import { Button, ButtonObj } from "./interfaces/button";
 
 export const buttons: Array<Button> = [
     {
